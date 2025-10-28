@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+    <!-- Black Rounded Background Square -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M10,0 L90,0 C95.5,0 100,4.5 100,10 L100,90 C100,95.5 95.5,100 90,100 L10,100 C4.5,100 0,95.5 0,90 L0,10 C0,4.5 4.5,0 10,0 Z"
+        />
+
+    <!-- The white 'N' (simplified path drawing) -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M25 80 L25 20 L55 20 L55 35 L40 35 L40 45 L55 45 L55 65 L40 65 L40 80 Z"
+        />
+
+    <!-- The White Sparkle/Shine effect -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M75 10 L80 25 L95 30 L80 35 L75 50 L70 35 L55 30 L70 25 Z"
+        android:translateX="10"
+        android:translateY="-15"
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        />
+</vector>

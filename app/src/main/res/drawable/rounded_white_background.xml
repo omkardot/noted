@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This drawable provides a white background with rounded corners (12dp) and a subtle shadow/outline. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Item 1: The Subtle Shadow/Outline (Optional, but adds depth) -->
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Set a subtle, dark color for the shadow -->
+            <solid android:color="#33000000" />
+            <corners android:radius="13dp" /> <!-- Slightly larger radius than the main background -->
+        </shape>
+    </item>
+
+    <!-- Item 2: The Main White Background -->
+    <item android:bottom="1dp" android:right="1dp" android:left="1dp" android:top="1dp">
+        <shape android:shape="rectangle">
+            <!-- Solid white color -->
+            <solid android:color="#FFFFFFFF" />
+            <!-- Rounded corners (12dp) -->
+            <corners android:radius="12dp" />
+        </shape>
+    </item>
+</layer-list>

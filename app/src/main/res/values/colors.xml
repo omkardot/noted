@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Primary Colors -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="blue_accent">#1976D2</color>
+    <color name="blue_accent_dark">#1565C0</color>
+
+    <!-- Background Colors -->
+    <color name="background_light">#FAFAFA</color>
+    <color name="background_white">#FFFFFF</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#000000</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#9E9E9E</color>
+    <color name="text_link">#1976D2</color>
+
+    <!-- Border Colors -->
+    <color name="gray_border_focused">#000000</color>
+
+    <!-- Example: Defining your border color -->
+    <color name="gray_border">#FFE0E0E0</color>
+
+    <!-- Error Colors -->
+    <color name="error_background">#FFEBEE</color>
+    <color name="error_border">#EF5350</color>
+    <color name="error_text">#D32F2F</color>
+    <color name="error_red">#D32F2F</color>
+
+    <!-- Password Strength Colors -->
+    <color name="password_weak">#F44336</color>
+    <color name="password_fair">#FF9800</color>
+    <color name="password_good">#FFC107</color>
+    <color name="password_strong">#4CAF50</color>
+
+    <!-- Social Login Colors -->
+    <color name="linkedin_blue">#0A66C2</color>
+    <color name="google_border">#DADCE0</color>
+
+    <!-- Button Colors -->
+    <color name="button_disabled">#BDBDBD</color>
+    <color name="button_pressed">#424242</color>
+    <color name="gray_500">#777D8E</color>
+    <color name="blue_800">#142C9D</color>
 </resources>

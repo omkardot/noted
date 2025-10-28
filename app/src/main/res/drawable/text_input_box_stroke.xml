@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Error state - Red border -->
+    <item android:color="@color/error_red" android:state_focused="true" app:state_error="true" xmlns:app="http://schemas.android.com/apk/res-auto"/>
+    <item android:color="@color/error_red" app:state_error="true" xmlns:app="http://schemas.android.com/apk/res-auto"/>
+
+    <!-- Focused state - Black border -->
+    <item android:color="@color/black" android:state_focused="true"/>
+    <item android:color="@color/black" android:state_hovered="true"/>
+
+    <!-- Default state - Gray border -->
+    <item android:color="@color/gray_border"/>
+</selector>

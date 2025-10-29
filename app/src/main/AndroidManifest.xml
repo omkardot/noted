@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_noted_logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Noted"
+        android:theme="@style/Base.Theme.Noted"
         tools:targetApi="31">
         <activity
             android:name=".View.PoastGerenratorInput"
@@ -28,7 +28,7 @@
         <activity
             android:name=".View.MainActivity"
             android:exported="false"
-            android:theme="@style/Theme.Noted"></activity>
+            ></activity>
     </application>
 
 </manifest>

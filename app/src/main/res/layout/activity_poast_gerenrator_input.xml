@@ -182,13 +182,15 @@
                         android:paddingHorizontal="8dp"
                         android:paddingVertical="10dp"
                         android:layout_marginRight="10dp"
-                        android:background="@drawable/chip_unselected_background"
+                        android:id="@+id/ll_professional"
+                        android:background="@drawable/chip_selected_background"
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Professional"
-                            android:layout_gravity="center"
+                            android:id="@+id/tv_professional"
+                            android:layout_gravity="center_vertical"
                             android:textColor="@color/white"
                             android:fontFamily="@font/poppins_regular"
                             />
@@ -199,15 +201,17 @@
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="8dp"
                         android:paddingVertical="10dp"
+                        android:id="@+id/ll_friendly"
                         android:layout_marginHorizontal="10dp"
-                        android:background="@drawable/chip_selected_background"
+                        android:background="@drawable/chip_unselected_background"
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Friendly"
+                            android:id="@+id/tv_friendly"
                             android:layout_gravity="center"
-                            android:textColor="#313338"
+                            android:textColor="@color/text_secondary"
                             android:fontFamily="@font/poppins_regular"
                             />
                     </LinearLayout>
@@ -217,13 +221,16 @@
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="8dp"
                         android:paddingVertical="10dp"
+                        android:id="@+id/ll_story_telling"
                         android:layout_marginHorizontal="10dp"
-                        android:background="@drawable/chip_selected_background"
+                        android:background="@drawable/chip_unselected_background"
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Storytelling"
+                            android:textColor="@color/text_secondary"
+                            android:id="@+id/tv_story_telling"
                             android:fontFamily="@font/poppins_regular"
                             />
                     </LinearLayout>
@@ -263,13 +270,15 @@
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="8dp"
                         android:paddingVertical="10dp"
+                        android:id="@+id/ll_short"
                         android:layout_marginRight="10dp"
-                        android:background="@drawable/chip_unselected_background"
+                        android:background="@drawable/chip_selected_background"
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Short"
+                            android:id="@+id/tv_short"
                             android:textColor="@color/white"
                             android:fontFamily="@font/poppins_regular"
                             />
@@ -278,15 +287,18 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
+                        android:id="@+id/ll_medium"
                         android:paddingHorizontal="8dp"
-                        android:paddingVertical="10dp"                        android:layout_marginHorizontal="10dp"
-                        android:background="@drawable/chip_selected_background"
+                        android:paddingVertical="10dp"
+                        android:layout_marginHorizontal="10dp"
+                        android:background="@drawable/chip_unselected_background"
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Medium"
+                            android:id="@+id/tv_medium"
+                            android:textColor="@color/text_secondary"
                             android:fontFamily="@font/poppins_regular"
                             />
                     </LinearLayout>
@@ -296,13 +308,16 @@
                         android:layout_height="wrap_content"
                         android:paddingHorizontal="8dp"
                         android:paddingVertical="10dp"
+                        android:id="@+id/ll_long"
                         android:layout_marginHorizontal="10dp"
-                        android:background="@drawable/chip_selected_background"
+                        android:background="@drawable/chip_unselected_background"
                         >
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Long"
+                            android:id="@+id/tv_long"
+                            android:textColor="@color/text_secondary"
                             android:fontFamily="@font/poppins_regular"
                             />
                     </LinearLayout>
@@ -315,32 +330,52 @@
 
 
             <!-- 6. Toggle Switch (Hashtags) -->
-            <Switch
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/switch_hashtags"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Auto-Include Hashtags"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                android:visibility="gone"
                 android:textColor="#424A59"
                 android:padding="12dp"
                 android:background="@drawable/rounded_white_background"
-                android:checked="true"
+                android:checked="false"
                 android:fontFamily="@font/poppins_regular"
                 android:layout_marginBottom="32dp" />
-            <Button
-                android:id="@+id/button_generate_post"
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Generate Post"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:fontFamily="@font/poppins_bold"
-                android:paddingVertical="12dp"
-                android:backgroundTint="@color/linkedin_blue"
-                android:textColor="@color/white"
-                android:drawableTint="@color/white"
-                style="@style/Widget.Material3.Button" />
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:paddingVertical="8dp"
+                android:id="@+id/ll_generate_btn"
+                android:background="@drawable/rounded_background_blue">
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@color/white"
+                    android:layout_marginRight="15dp"
+                    android:visibility="gone" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Generate Post"
+                    android:id="@+id/text_status"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+
 
             <!-- Mock Icon for Send -->
             <!-- @drawable/ic_send -->

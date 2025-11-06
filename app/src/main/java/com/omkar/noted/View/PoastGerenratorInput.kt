@@ -29,6 +29,7 @@ import com.omkar.noted.Genaric.Content
 import com.omkar.noted.Genaric.GeminiApiService
 import com.omkar.noted.Genaric.GeminiRequest
 import com.omkar.noted.Genaric.GeminiResponse
+import com.omkar.noted.Genaric.GenricApiCalls
 import com.omkar.noted.Genaric.Part
 import com.omkar.noted.R
 import retrofit2.Call
@@ -160,101 +161,126 @@ class PoastGerenratorInput : AppCompatActivity() {
         }
         ll_generate_btn.setOnClickListener {
 
-            callGeminiApi(input_text_area.text.toString(),
-                    selectedTone,
-                    selectedlength,
-                    includeHashtag)
+//            callGeminiApi(input_text_area.text.toString(),
+//                    selectedTone,
+//                    selectedlength,
+//                    includeHashtag)
+            showLoading()
+            GenricApiCalls(
+                userInput = input_text_area.text.toString(),
+                tone = selectedTone,
+                length = selectedlength,
+                includeHashtags = includeHashtag
+            ) { generatedText ->
+                runOnUiThread {  // make sure UI updates happen safely
+                    hideLoading()
+
+                    if (generatedText != null) {
+                        // ✅ Update your EditText or TextView here
+                        Log.d("API responce",generatedText)
+                        val intent = Intent(this@PoastGerenratorInput,ViewGenratedPoastForLinkedIn::class.java)
+                        intent.putExtra("responce",generatedText)
+                        intent.putExtra("inputText",input_text_area.text.toString())
+                        intent.putExtra("selectedTone",selectedTone)
+                        intent.putExtra("selectedlength",selectedlength)
+                        intent.putExtra("includeHashtag",includeHashtag)
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this, "Failed to generate post", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }.generatePost()
+            hideLoading()
         }
 
     }
-    private fun callGeminiApi(userInput: String, tone: String, length: String, includeHashtags: String) {
-        showLoading()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://generativelanguage.googleapis.com/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val service = retrofit.create(GeminiApiService::class.java)
-
-        // 🧩 Dynamic Prompt
-        val prompt = """
-        You are an expert LinkedIn post writer.
-
-        Generate a LinkedIn post based on the following input:
-
-        User’s input/idea:
-        "$userInput"
-
-        Tone of the post:
-        "$tone"  (e.g., professional, motivational, friendly, informative)
-
-        Length of the post:
-        "$length"  (e.g., short, medium, long)
-
-        Include hashtags:
-        "$includeHashtags"  (yes or no)
-
-        ---
-
-        Requirements:
-        - Write the post in a natural, engaging style suitable for LinkedIn.
-        - If hashtags are allowed, include 3–5 relevant and trending hashtags at the end.
-        - Avoid emojis unless the tone is friendly or motivational.
-        - The post should feel authentic, not robotic.
-    """.trimIndent()
-
-        val request = GeminiRequest(
-            contents = listOf(
-                Content(
-                    parts = listOf(
-                        Part(prompt)
-                    )
-                )
-            )
-        )
-
-        val apiKey = "AIzaSyDguLqqJjP4t1gj0_A9CFujd-qsyOI0oG0"
-
-        service.generateText(apiKey, request)
-            .enqueue(object : Callback<GeminiResponse> {
-                override fun onResponse(
-                    call: Call<GeminiResponse>,
-                    response: Response<GeminiResponse>
-                ) {
-                    hideLoading()
-                    if (response.isSuccessful) {
-                        val text = response.body()
-                            ?.candidates
-                            ?.firstOrNull()
-                            ?.content
-                            ?.parts
-                            ?.firstOrNull()
-                            ?.text
-
-                        Log.d("Gemini", "Response: $text")
-                        text?.let {
-                            // ✅ Display or set text somewhere
-                            val cleanText = text
-                                ?.replace(Regex("(?i)^(okay|sure|here('|’)s|alright|let me).*?:?\\s*", RegexOption.MULTILINE), "")
-                                ?.trim()
-
-                            if (cleanText != null) {
-                                Log.d("API responce",cleanText)
-                            }
-                        }
-                    } else {
-                        Log.e("Gemini", "Error: ${response.code()} - ${response.errorBody()?.string()}")
-                    }
-                }
-
-                override fun onFailure(call: Call<GeminiResponse>, t: Throwable) {
-                    hideLoading()
-                    Log.e("Gemini", "Failure: ${t.message}")
-                }
-            })
-    }
-
+//    private fun callGeminiApi(userInput: String, tone: String, length: String, includeHashtags: String) {
+//        showLoading()
+//
+//        val retrofit = Retrofit.Builder()
+//            .baseUrl("https://generativelanguage.googleapis.com/")
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
+//
+//        val service = retrofit.create(GeminiApiService::class.java)
+//
+//        // 🧩 Dynamic Prompt
+//        val prompt = """
+//        Write a LinkedIn post. Do not explain what you're doing, do not use markdown formatting like **bold** or _italics_, and do not add any preamble or commentary. Write only the post content itself as if you are the person posting.
+//
+//Topic: "$userInput"
+//Tone: "$tone"
+//Length: "$length"
+//Hashtags: "$includeHashtags"
+//
+//Guidelines:
+//- Write in first person as the LinkedIn user
+//- Use natural paragraph breaks (empty lines between paragraphs)
+//- Keep the tone authentic and conversational
+//- If hashtags are requested, add 3-5 relevant ones at the end
+//- Use emojis sparingly and only if tone is friendly or motivational
+//- Start directly with the post content - no "Here's your post:" or similar phrases
+//- Avoid obvious AI patterns like "In conclusion" or overly structured formatting
+//    """.trimIndent()
+//
+//        val request = GeminiRequest(
+//            contents = listOf(
+//                Content(
+//                    parts = listOf(
+//                        Part(prompt)
+//                    )
+//                )
+//            )
+//        )
+//
+//        val apiKey = "AIzaSyDguLqqJjP4t1gj0_A9CFujd-qsyOI0oG0"
+//
+//        service.generateText(apiKey, request)
+//            .enqueue(object : Callback<GeminiResponse> {
+//                override fun onResponse(
+//                    call: Call<GeminiResponse>,
+//                    response: Response<GeminiResponse>
+//                ) {
+//                    hideLoading()
+//                    if (response.isSuccessful) {
+//                        val text = response.body()
+//                            ?.candidates
+//                            ?.firstOrNull()
+//                            ?.content
+//                            ?.parts
+//                            ?.firstOrNull()
+//                            ?.text
+//
+//                        Log.d("Gemini", "Response: $text")
+//                        text?.let {
+//                            // ✅ Display or set text somewhere
+//                            val cleanText = text
+//                                ?.replace(Regex("(?i)^(okay|sure|here('|’)s|alright|let me).*?:?\\s*", RegexOption.MULTILINE), "")
+//                                ?.trim()
+//
+//                            if (cleanText != null) {
+//                                Log.d("API responce",cleanText)
+//                                val intent = Intent(this@PoastGerenratorInput,ViewGenratedPoastForLinkedIn::class.java)
+//                                intent.putExtra("responce",cleanText)
+//                                intent.putExtra("inputText",input_text_area.text.toString())
+//                                intent.putExtra("selectedTone",selectedTone)
+//                                intent.putExtra("selectedlength",selectedlength)
+//                                intent.putExtra("includeHashtag",includeHashtag)
+//                                startActivity(intent)
+//                            }
+//                        }
+//                    } else {
+//                        Log.e("Gemini", "Error: ${response.code()} - ${response.errorBody()?.string()}")
+//                    }
+//                }
+//
+//                override fun onFailure(call: Call<GeminiResponse>, t: Throwable) {
+//                    hideLoading()
+//                    Log.e("Gemini", "Failure: ${t.message}")
+//                }
+//            })
+//    }
+//
 
 
     fun showLoading() {

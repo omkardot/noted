@@ -35,9 +35,13 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.omkar.noted.Database.DatabaseHelper
 import com.omkar.noted.Genaric.NotedSharedPreference
 import com.omkar.noted.R
 import com.omkar.noted.View.PoastGerenratorInput
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
 class LoginFragment : Fragment() {
@@ -75,6 +79,7 @@ class LoginFragment : Fragment() {
     private lateinit var authSwitchPrompt: TextView
     private lateinit var authSwitchAction: TextView
     private lateinit var prefs: NotedSharedPreference
+    private lateinit var dbHelper: DatabaseHelper
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -87,6 +92,7 @@ class LoginFragment : Fragment() {
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
         prefs = NotedSharedPreference(view.context)
+        dbHelper = DatabaseHelper(view.context)
 
         // Google sign-in config
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -543,10 +549,24 @@ class LoginFragment : Fragment() {
             showLoading(false)
             if (task.isSuccessful) {
                 saveUserToFirestore(auth.currentUser, "google")
+                insertDataToDB(auth.currentUser,"google")
             } else {
                 showError("Google login failed: ${task.exception?.message}")
             }
         }
+    }
+    private fun insertDataToDB(user: FirebaseUser?, provider: String, displayName: String? = null){
+        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+        val inserted =  dbHelper.insertUser(
+            user!!.uid,
+            user.displayName!!,
+            user.email!!,
+            provider,
+            currentTime.toString(),
+            currentTime.toString(),
+            user.photoUrl?.toString()!!
+        )
+        Log.d("Inserted",inserted.toString())
     }
 
     private fun saveUserToFirestore(user: FirebaseUser?, provider: String, displayName: String? = null) {
@@ -587,11 +607,6 @@ class LoginFragment : Fragment() {
         startActivity(Intent(requireContext(),PoastGerenratorInput::class.java))
         prefs.saveString("username", "Omkar")
         prefs.saveBoolean("isLoggedIn", true)
-        // Example navigation - adjust based on your app structure
-        // val homeFragment = HomeFragment()
-        // parentFragmentManager.beginTransaction()
-        //     .replace(R.id.fragment_container, homeFragment)
-        //     .commit()
     }
 }
 

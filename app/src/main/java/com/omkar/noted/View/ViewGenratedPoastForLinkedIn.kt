@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -20,8 +21,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
+import com.omkar.noted.Database.DatabaseHelper
 import com.omkar.noted.Genaric.GenricApiCalls
 import com.omkar.noted.R
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
     private var apiresponce=""
@@ -29,7 +35,8 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
     private var selectedlength=""
     private var selectedTone=""
     private var inputText=""
-    private lateinit var name:TextView
+    private lateinit var username:TextView
+    private lateinit var userImage:ImageView
     private lateinit var position:TextView
     private lateinit var aiPost:EditText
     private lateinit var ll_edit_post:LinearLayout
@@ -40,6 +47,7 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
     private lateinit var regenratePost:LinearLayout
     private lateinit var progressBar:ProgressBar
     private lateinit var textStatus:TextView
+    private lateinit var db:DatabaseHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -49,16 +57,20 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        db = DatabaseHelper(this@ViewGenratedPoastForLinkedIn)
         fetchIntent()
         initView()
+        fetchNameAndImageFromDB()
         aiPost.setText(apiresponce)
         action_back.setOnClickListener {
             onBackPressed()
         }
+
+
         ll_copy.setOnClickListener {
             val textToCopy = aiPost.text.toString()  // get text from EditText
             if (textToCopy.isNotEmpty()) {
-                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("Copied Text", textToCopy)
                 clipboard.setPrimaryClip(clip)
 
@@ -80,6 +92,22 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
         }
         ll_edit_post.setOnClickListener {
             aiPost.isEnabled =true
+        }
+        ll_save.setOnClickListener {
+
+
+            val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+            try {
+                val inserted = db.insertSavedPost(currentTime, aiPost.text.toString())
+
+                if (inserted != -1L) {
+                    Toast.makeText(this, "Post Saved Successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Failed to Save Post", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Log.e("ERROR", e.toString())
+            }
         }
         regenratePost.setOnClickListener {
             showLoading()
@@ -104,6 +132,16 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
         }
 
     }
+
+    private fun fetchNameAndImageFromDB() {
+        val (name, imageUrl) = db.getImageAndName()
+        username.text = name.toString()
+        Glide.with(this@ViewGenratedPoastForLinkedIn)
+            .asBitmap()
+            .load(imageUrl)
+            .into(userImage)
+    }
+
     fun showLoading() {
         progressBar.visibility = View.VISIBLE
         textStatus.text = "Crafting your post"
@@ -116,7 +154,8 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
     }
 
     private fun initView() {
-        name = findViewById(R.id.username)
+        username = findViewById(R.id.username)
+        userImage = findViewById(R.id.userImage)
         position = findViewById(R.id.positon)
         aiPost = findViewById(R.id.tv_genrated)
         aiPost.isEnabled = false

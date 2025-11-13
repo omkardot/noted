@@ -3,12 +3,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F7FAFC"
     tools:context=".Fragements.SavedPostFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="16dp"
+            android:paddingLeft="16dp"
+            >
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/baseline_arrow_back_24"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:paddingEnd="40dp"
+                android:text="Past Post"
+                android:textColor="#0D121C"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:fontFamily="@font/poppins_bold"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:paddingVertical="12dp"
+            android:paddingHorizontal="16dp"
+            android:orientation="horizontal"
+            android:background="@drawable/rounded_search_bar">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foregroundTint="#4D6699"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/baseline_search_24"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="  Search posts"
+            android:textSize="16dp"
+            android:textColor="#4D6699"
+            />
+    </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/saved_post_item"
+            android:id="@+id/post_recycleview"/>
+    </LinearLayout>
+
+
 
 </FrameLayout>

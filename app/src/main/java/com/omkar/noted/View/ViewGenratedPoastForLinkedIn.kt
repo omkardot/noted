@@ -79,10 +79,6 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
                 Toast.makeText(this, "Nothing to copy", Toast.LENGTH_SHORT).show()
             }
         }
-
-        ll_save.setOnClickListener {
-            aiPost.isEnabled = true
-        }
         ll_share.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
@@ -96,9 +92,10 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
         ll_save.setOnClickListener {
 
 
-            val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+            val currentTime = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
             try {
-                val inserted = db.insertSavedPost(currentTime, aiPost.text.toString())
+                Log.d("inputText",inputText)
+                val inserted = db.insertSavedPost(currentTime, aiPost.text.toString(),inputText)
 
                 if (inserted != -1L) {
                     Toast.makeText(this, "Post Saved Successfully", Toast.LENGTH_SHORT).show()
@@ -174,16 +171,18 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
         if (intent.hasExtra("responce")){
             apiresponce = intent.getStringExtra("responce").toString()
         }
-        else if (intent.hasExtra("inputText")){
+        if (intent.hasExtra("inputText")){
             inputText =intent.getStringExtra("inputText").toString()
+            Toast.makeText(this@ViewGenratedPoastForLinkedIn,inputText,Toast.LENGTH_SHORT).show()
         }
-        else if (intent.hasExtra("selectedTone")){
+
+        if (intent.hasExtra("selectedTone")){
             selectedTone = intent.getStringExtra("selectedTone").toString()
         }
-        else if (intent.hasExtra("selectedlength")){
+        if (intent.hasExtra("selectedlength")){
             selectedlength =intent.getStringExtra("includeHashtag").toString()
         }
-        else if (intent.hasExtra("includeHashtag")){
+        if (intent.hasExtra("includeHashtag")){
             includeHashtag = intent.getStringExtra("includeHashtag").toString()
         }
     }

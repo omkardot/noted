@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.omkar.noted.Genaric.SavedPosts
 import com.omkar.noted.Genaric.User
 
 class DatabaseHelper(context: Context) :
@@ -23,6 +24,7 @@ class DatabaseHelper(context: Context) :
             private const val COLUMN_EMAIL = "email"
             private const val COLUMN_PROVIDER = "provider"
             private const val COLUMN_CREATEDAT = "createdAt"
+            private const val COLUMN_SAVED_POST_TITLE = "saved_post_title"
             private const val COLUMN_LASTLOGIN = "lastLogin"
             private const val COLUMN_PROFILE_URL = "profilePicUrl"
             private const val COULMN_GENRATED_TEXT = "generated_text"
@@ -43,6 +45,7 @@ class DatabaseHelper(context: Context) :
             val createSavedPostTable = ("CREATE TABLE $TABLE_SAVED_POST ("
                     + "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + "$COLUMN_CREATEDAT TEXT, "
+                    + "$COLUMN_SAVED_POST_TITLE TEXT, "
                     + "$COULMN_GENRATED_TEXT TEXT)")
             db.execSQL(createSavedPostTable)
         }
@@ -53,11 +56,12 @@ class DatabaseHelper(context: Context) :
             onCreate(db)
         }
 
-        fun insertSavedPost(createdAt: String,genratedText:String):Long{
+        fun insertSavedPost(createdAt: String,genratedText:String,inputText:String):Long{
             val db = this.writableDatabase
             val values = ContentValues()
             values.put(COLUMN_CREATEDAT, createdAt)
             values.put(COULMN_GENRATED_TEXT, genratedText)
+            values.put(COLUMN_SAVED_POST_TITLE, inputText)
             val id = db.insert(TABLE_SAVED_POST, null, values)
 //            db.close()
             return id
@@ -121,7 +125,24 @@ class DatabaseHelper(context: Context) :
             db.close()
             return userList
         }
-
+        fun fetchSavedPostsFromLocalDB():List<SavedPosts>{
+            val saveed_post = ArrayList<SavedPosts>()
+            val db = this.readableDatabase
+            val cursor: Cursor = db.rawQuery("SELECT * FROM $TABLE_SAVED_POST", null)
+            if (cursor.moveToFirst()) {
+                do {
+                    val user = SavedPosts(
+                        title = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SAVED_POST_TITLE)),
+                        discription = cursor.getString(cursor.getColumnIndexOrThrow(COULMN_GENRATED_TEXT)),
+                        genrated_on = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_CREATEDAT))
+                    )
+                    saveed_post.add(user)
+                } while (cursor.moveToNext())
+            }
+            cursor.close()
+            db.close()
+            return saveed_post
+        }
         // Delete user
         fun deleteUser(id: Int): Int {
             val db = this.writableDatabase

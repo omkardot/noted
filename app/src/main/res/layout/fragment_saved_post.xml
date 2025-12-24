@@ -22,6 +22,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
+                android:id="@+id/action_back"
                 android:src="@drawable/baseline_arrow_back_24"/>
             <TextView
                 android:layout_width="match_parent"

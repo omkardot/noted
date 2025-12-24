@@ -7,64 +7,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".View.PoastGerenratorInput">
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:weightSum="10"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:elevation="4dp">
-
-        <!-- Title Section -->
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="10"
-            android:gravity="center">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="noted"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:textSize="35sp"
-                android:layout_marginLeft="40dp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:fontFamily="@font/poppins_bold" />
-        </LinearLayout>
-
-        <!-- Menu Icon Section -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:gravity="center"
-            android:paddingEnd="16dp"
-            android:paddingStart="8dp">
-
-            <ImageView
-                android:id="@+id/menu_icon"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/ic_menu"
-                android:padding="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Menu"
-                android:clickable="true"
-                android:focusable="true" />
-        </LinearLayout>
-
-    </LinearLayout>
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/background_light"
+
         android:padding="16dp">
 
         <!-- Main Vertical Container -->
@@ -80,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="20dp">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -89,7 +38,8 @@
                     android:textSize="22sp"
                     android:fontFamily="@font/poppins_bold"
                     android:textStyle="bold"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/text_primary"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -97,7 +47,8 @@
                     android:fontFamily="@font/poppins_regular"
                     android:text="Turn your learning moments into professional LinkedIn posts."
                     android:textSize="14sp"
-                    android:textColor="#515561" />
+                    android:textColor="@color/text_secondary"
+                    />
             </LinearLayout>
 
             <!-- 2. AI Assistant Prompt Box (Inline Instruction) -->
@@ -115,7 +66,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/chatgpt"
-                    android:tint="@color/linkedin_blue"
+                    android:tint="@color/accent_indigo"
                     android:layout_marginEnd="8dp"
                     android:contentDescription="AI Icon" />
 
@@ -125,7 +76,8 @@
                     android:fontFamily="@font/poppins_regular"
                     android:text="Tell the AI assistant what you achieved or learned in a simple sentence."
                     android:textSize="12sp"
-                    android:textColor="@color/blue_800" />
+                    android:textColor="@color/primary_blue"
+                 />
             </LinearLayout>
 
 
@@ -136,15 +88,16 @@
                 android:minLines="5"
                 android:gravity="top|start"
                 android:text="i have learned ai"
-                android:textColorHint="@color/gray_500"
                 android:fontFamily="@font/poppins_regular"
                 android:hint="I completed a course on C# generics and built a project using them."
                 android:inputType="textMultiLine"
                 android:padding="16dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_secondary"
                 android:background="@drawable/edittext_background"
-                android:textColor="@color/black"
+
                 android:textSize="16sp"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="20dp" />
 
             <!-- Mock Drawable for EditText -->
             <!-- @drawable/edittext_background (Shape drawable: solid white, stroke gray_300, radius 12dp, subtle elevation) -->
@@ -165,7 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="20dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -330,23 +283,6 @@
             <!-- @drawable/chip_unselected_background (Shape drawable: solid gray_200, radius 20dp) -->
 
 
-            <!-- 6. Toggle Switch (Hashtags) -->
-            <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/switch_hashtags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Auto-Include Hashtags"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:visibility="visible"
-                android:textColor="#424A59"
-                android:padding="12dp"
-                android:background="@drawable/rounded_white_background"
-                android:checked="false"
-                android:fontFamily="@font/poppins_regular"
-                android:layout_marginBottom="32dp" />
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
@@ -369,7 +305,8 @@
                     android:layout_height="match_parent"
                     android:text="Generate Post"
                     android:id="@+id/text_status"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
+                    android:fontFamily="@font/poppins_bold"
                     android:gravity="center"
                     android:textColor="@color/white"
                     android:textStyle="bold"

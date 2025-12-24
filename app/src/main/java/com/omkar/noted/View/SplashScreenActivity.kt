@@ -77,7 +77,7 @@ class SplashActivity : AppCompatActivity() {
 
             val isLoggedIn = prefs.getBoolean("isLoggedIn")
             if (isLoggedIn){
-                startActivity(Intent(this@SplashActivity, PoastGerenratorInput::class.java))
+                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
             }
             else{
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))

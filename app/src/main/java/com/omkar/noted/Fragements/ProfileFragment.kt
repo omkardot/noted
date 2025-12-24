@@ -1,60 +1,119 @@
 package com.omkar.noted.Fragements
 
+import android.annotation.SuppressLint
+import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.omkar.noted.Database.DatabaseHelper
 import com.omkar.noted.R
+import de.hdodenhof.circleimageview.CircleImageView
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ProfileFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ProfileFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+class ProfileFragment : AppCompatActivity() {
+    private lateinit var db:DatabaseHelper
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        setContentView(R.layout.fragment_profile)
+        db = DatabaseHelper(this@ProfileFragment)
+        initView()
+    }
+
+
+    private fun initView() {
+        val actionback = findViewById<ImageView>(R.id.action_back)
+        val profileImage = findViewById<CircleImageView>(R.id.profileImage)
+        val profile_name = findViewById<TextView>(R.id.profile_name)
+        val ll_helpandsupport = findViewById<LinearLayout>(R.id.ll_helpandsupport)
+        val logout = findViewById<TextView>(R.id.logout)
+
+        actionback.setOnClickListener {
+        onBackPressed()
+        }
+
+
+
+        fetchNameAndImageFromDB(profile_name,profileImage)
+        ll_helpandsupport.setOnClickListener {
+            showHelpAndSupportDialog()
+        }
+        logout.setOnClickListener {
+
         }
     }
+    private fun fetchNameAndImageFromDB(profile_name:TextView,profile_image: CircleImageView) {
+        val (name, imageUrl) = db.getImageAndName()
+        profile_name.text = name.toString()
+        Glide.with(this)
+            .asBitmap()
+            .load(imageUrl)
+            .placeholder(R.drawable.baseline_person_24)
+            .into(profile_image)
+    }
+    private fun showHelpAndSupportDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_help_support, null)
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+
+        // Initialize views
+        val btnClose = dialogView.findViewById<ImageButton>(R.id.btnClose)
+        val btnContactSupport = dialogView.findViewById<LinearLayout>(R.id.btnContactSupport)
+        val btnReportBug = dialogView.findViewById<LinearLayout>(R.id.btnReportBug)
+
+        // Set click listeners
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+
+        btnContactSupport.setOnClickListener {
+            dialog.dismiss()
+            openContactSupport()
+        }
+        btnReportBug.setOnClickListener {
+            dialog.dismiss()
+            openReportBug()
+        }
+
+        // Show dialog with rounded corners
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.show()
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProfileFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProfileFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    // Helper functions
+    private fun openFAQSection() {
+        // Navigate to FAQ screen or open URL
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://yourapp.com/faq"))
+        startActivity(intent)
+    }
+
+    private fun openContactSupport() {
+        // Open email client or support chat
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:support@Noted.com")
+            putExtra(Intent.EXTRA_SUBJECT, "Support Request")
+        }
+        startActivity(Intent.createChooser(intent, "Contact Support"))
+    }
+
+    private fun openReportBug() {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:bugs@noted.com")
+            putExtra(Intent.EXTRA_SUBJECT, "Bug Report")
+        }
+        startActivity(Intent.createChooser(intent, "Report Bug"))
     }
 }

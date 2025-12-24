@@ -1,6 +1,7 @@
 package com.omkar.noted
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import com.google.firebase.FirebaseApp
 
 class NotedApplication : Application() {
@@ -10,5 +11,7 @@ class NotedApplication : Application() {
 
         // Initialize Firebase
         FirebaseApp.initializeApp(this)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
     }
 }

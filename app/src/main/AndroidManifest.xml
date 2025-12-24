@@ -20,6 +20,12 @@
             android:name=".View.PoastGerenratorInput"
             android:exported="false" />
         <activity
+            android:name=".Fragements.ProfileFragment"
+            android:exported="false" />
+        <activity
+            android:name=".Fragements.SavedPostFragment"
+            android:exported="false" />
+        <activity
             android:name=".View.SplashActivity"
             android:exported="true">
             <intent-filter>

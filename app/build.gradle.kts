@@ -76,4 +76,8 @@ dependencies {
     implementation(platform("io.github.jan-tennert.supabase:bom:3.1.1"))
     implementation("com.google.firebase:firebase-firestore:22.0.1")
 
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation ("com.github.bumptech.glide:glide:5.0.5")
+
+
 }

@@ -1,5 +1,6 @@
 package com.omkar.noted.View
 
+import HuggingFaceTextGenerator
 import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -21,10 +22,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.omkar.noted.Database.DatabaseHelper
 import com.omkar.noted.Genaric.GenricApiCalls
 import com.omkar.noted.R
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -44,10 +47,13 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
     private lateinit var ll_share:LinearLayout
     private lateinit var ll_save:LinearLayout
     private lateinit var action_back:ImageView
+    private lateinit var menu_icon:ImageView
     private lateinit var regenratePost:LinearLayout
     private lateinit var progressBar:ProgressBar
     private lateinit var textStatus:TextView
     private lateinit var db:DatabaseHelper
+    private lateinit var generator : HuggingFaceTextGenerator
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -58,6 +64,7 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
             insets
         }
         db = DatabaseHelper(this@ViewGenratedPoastForLinkedIn)
+        generator= HuggingFaceTextGenerator(this@ViewGenratedPoastForLinkedIn)
         fetchIntent()
         initView()
         fetchNameAndImageFromDB()
@@ -84,7 +91,12 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_TEXT, aiPost.text.toString())
             startActivity(Intent.createChooser(shareIntent, "Share via"))
-
+        }
+        menu_icon.setOnClickListener {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "text/plain"
+            shareIntent.putExtra(Intent.EXTRA_TEXT, aiPost.text.toString())
+            startActivity(Intent.createChooser(shareIntent, "Share via"))
         }
         ll_edit_post.setOnClickListener {
             aiPost.isEnabled =true
@@ -107,27 +119,61 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
             }
         }
         regenratePost.setOnClickListener {
-            showLoading()
-
-            GenricApiCalls(
-                userInput = aiPost.text.toString(),
-                tone = selectedTone,
-                length = selectedlength,
-                includeHashtags = includeHashtag
-            ) { generatedText ->
-                runOnUiThread {  // make sure UI updates happen safely
-                    hideLoading()
-
-                    if (generatedText != null) {
-                        // ✅ Update your EditText or TextView here
-                        aiPost.setText(generatedText)
-                    } else {
-                        Toast.makeText(this, "Failed to generate post", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }.generatePost()
+            generateText()
         }
 
+    }
+    fun generateText() {
+        // Validate input
+        if (inputText.isEmpty()) {
+            Toast.makeText(this, "Please enter a topic", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Show loading BEFORE starting the coroutine
+        showLoading()
+
+        lifecycleScope.launch {
+            val prompt = """
+Write a LinkedIn post. Do not explain what you're doing, do not use markdown formatting like **bold** or _italics_, and do not add any preamble or commentary. Write only the post content itself as if you are the person posting.
+
+Topic: "${inputText}"
+Tone: "$selectedTone"
+Length: "$selectedlength"
+Hashtags: "$includeHashtag"
+
+Guidelines:
+- Write in first person as the LinkedIn user
+- Use natural paragraph breaks (empty lines between paragraphs)
+- Keep the tone authentic and conversational
+- If hashtags are requested, add 3–5 relevant ones at the end
+- Use emojis sparingly and only if tone is friendly or motivational
+- Start directly with the post content — no "Here's your post:" etc.
+- Avoid obvious AI patterns like "In conclusion" or overly structured formatting
+            """.trimIndent()
+            Log.d("Prompt",prompt)
+            val result = generator.generateText(
+                prompt = prompt
+            )
+
+            // Hide loading AFTER getting the result
+            hideLoading()
+
+            result.onSuccess { text ->
+                Log.d("API responce", text)
+                aiPost.setText(text)
+
+            }.onFailure { error ->
+                Log.e("HuggingFace", "Error: ${error.message}", error)
+
+                // Show error to user
+                Toast.makeText(
+                    this@ViewGenratedPoastForLinkedIn,
+                    "Failed to generate post: ${error.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     private fun fetchNameAndImageFromDB() {
@@ -164,6 +210,7 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
         regenratePost = findViewById(R.id.regenratePost)
         textStatus = findViewById(R.id.text_status)
         progressBar = findViewById(R.id.progressBar)
+        menu_icon = findViewById(R.id.menu_icon)
     }
 
     private fun fetchIntent() {
@@ -173,14 +220,13 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
         }
         if (intent.hasExtra("inputText")){
             inputText =intent.getStringExtra("inputText").toString()
-            Toast.makeText(this@ViewGenratedPoastForLinkedIn,inputText,Toast.LENGTH_SHORT).show()
         }
 
         if (intent.hasExtra("selectedTone")){
             selectedTone = intent.getStringExtra("selectedTone").toString()
         }
         if (intent.hasExtra("selectedlength")){
-            selectedlength =intent.getStringExtra("includeHashtag").toString()
+            selectedlength =intent.getStringExtra("selectedlength").toString()
         }
         if (intent.hasExtra("includeHashtag")){
             includeHashtag = intent.getStringExtra("includeHashtag").toString()

@@ -38,6 +38,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.omkar.noted.Database.DatabaseHelper
 import com.omkar.noted.Genaric.NotedSharedPreference
 import com.omkar.noted.R
+import com.omkar.noted.View.MainActivity
 import com.omkar.noted.View.PoastGerenratorInput
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -602,10 +603,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun navigateToHome() {
-        // Navigate to your home fragment
-        Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
-        startActivity(Intent(requireContext(),PoastGerenratorInput::class.java))
-        prefs.saveString("username", "Omkar")
+        startActivity(Intent(requireContext(),MainActivity::class.java))
         prefs.saveBoolean("isLoggedIn", true)
     }
 }

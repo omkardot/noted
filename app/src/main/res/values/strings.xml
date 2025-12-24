@@ -48,4 +48,7 @@
     <string name="password_strength_fair">Password strength: Fair</string>
     <string name="password_strength_good">Password strength: Good</string>
     <string name="password_strength_strong">Password strength: Strong</string>
+    <string name="huggingfacetoken">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</string>
+    <string name="open_drawer">Open the Drawer\n</string>
+    <string name="close_drawer">Close the Drawer\n</string>
 </resources>

@@ -4,7 +4,7 @@
     android:shape="rectangle">
 
     <!-- Solid color using the LINKEDIN_BLUE constant defined in the Canvas -->
-    <solid android:color="#FF0A66C2" />
+    <solid android:color="#E8EBF2" />
 
     <!-- Rounded corners equivalent to 'rounded-full' -->
     <corners android:radius="12dp" />

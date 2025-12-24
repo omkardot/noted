@@ -1,5 +1,6 @@
 package com.omkar.noted.View
 
+import HuggingFaceTextGenerator
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -24,6 +25,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.navigation.NavigationView
 import com.omkar.noted.Genaric.Content
 import com.omkar.noted.Genaric.GeminiApiService
@@ -31,6 +33,8 @@ import com.omkar.noted.Genaric.GeminiRequest
 import com.omkar.noted.Genaric.GenricApiCalls
 import com.omkar.noted.Genaric.Part
 import com.omkar.noted.R
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,6 +45,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 class PoastGerenratorInput : AppCompatActivity() {
+    private lateinit var generator : HuggingFaceTextGenerator
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var menuImage: ImageView
@@ -49,7 +54,7 @@ class PoastGerenratorInput : AppCompatActivity() {
     private lateinit var input_text_area: EditText
     private var selectedTone = "professional"
     private var selectedlength = "short"
-    private var includeHashtag = "no"
+    private var includeHashtag = "Yes"
     private lateinit var ll_profetional: LinearLayout
     private lateinit var ll_friendly: LinearLayout
     private lateinit var ll_storytelling: LinearLayout
@@ -70,6 +75,8 @@ class PoastGerenratorInput : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_poast_gerenrator_input)
         iniatView()
+        generator= HuggingFaceTextGenerator(this@PoastGerenratorInput)
+
         onclickListners()
 
 
@@ -153,60 +160,96 @@ class PoastGerenratorInput : AppCompatActivity() {
             tv_short.setTextColor(resources.getColor(R.color.text_secondary))
             tv_long.setTextColor(resources.getColor(R.color.white))
         }
-        if (switch.isChecked) {
-            includeHashtag = "yes"
-        } else {
-            includeHashtag = "no"
-        }
+
         ll_generate_btn.setOnClickListener {
-
-//            callGeminiApi(input_text_area.text.toString(),
-//                    selectedTone,
-//                    selectedlength,
-//                    includeHashtag)
-            showLoading()
-            GenricApiCalls(
-                userInput = input_text_area.text.toString(),
-                tone = selectedTone,
-                length = selectedlength,
-                includeHashtags = includeHashtag
-            ) { generatedText ->
-                runOnUiThread {  // make sure UI updates happen safely
-                    hideLoading()
-
-                    if (generatedText != null) {
-                        // ✅ Update your EditText or TextView here
-                        Log.d("API responce",generatedText)
-                        val intent = Intent(this@PoastGerenratorInput,ViewGenratedPoastForLinkedIn::class.java)
-                        intent.putExtra("responce",generatedText)
-                        intent.putExtra("inputText",input_text_area.text.toString())
-                        intent.putExtra("selectedTone",selectedTone)
-                        intent.putExtra("selectedlength",selectedlength)
-                        intent.putExtra("includeHashtag",includeHashtag)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(this, "Failed to generate post", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }.generatePost()
-            hideLoading()
+            generateText()
         }
 
     }
+     fun generateText() {
+        // Validate input
+        if (input_text_area.text.isNullOrBlank()) {
+            Toast.makeText(this, "Please enter a topic", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-    fun showLoading() {
+        // Show loading BEFORE starting the coroutine
+        showLoading()
+
+        lifecycleScope.launch {
+            val (wordRange, maxTokens) = when (selectedlength) {
+                "Short" -> Pair("30-50 words", 150)
+                "Medium" -> Pair("50-100 words", 300)
+                "Long" -> Pair("100-150 words", 500)
+                else -> Pair("100-150 words", 300)
+            }
+
+            val prompt = """
+Write a LinkedIn post. Do not explain what you're doing, do not use markdown formatting like **bold** or _italics_, and do not add any preamble or commentary. Write only the post content itself as if you are the person posting.
+
+Topic: "${input_text_area.text}"
+Tone: "$selectedTone"
+Length: "$selectedlength" ($wordRange)
+Hashtags: "$includeHashtag"
+
+Guidelines:
+- Write in first person as the LinkedIn user
+- IMPORTANT: Keep the post EXACTLY within the $wordRange range
+- Use natural paragraph breaks (empty lines between paragraphs)
+- Keep the tone authentic and conversational
+- If hashtags are requested, add 3–5 relevant ones at the end (hashtags don't count toward word limit)
+- Use emojis sparingly and only if tone is friendly or motivational
+- Start directly with the post content — no "Here's your post:" etc.
+- Avoid obvious AI patterns like "In conclusion" or overly structured formatting
+- Make every word count — be concise and impactful
+            """.trimIndent()
+
+            val result = generator.generateText(
+                prompt = prompt
+            )
+
+            // Hide loading AFTER getting the result
+            hideLoading()
+
+            result.onSuccess { text ->
+                Log.d("API responce", text)
+
+                // Navigate to result screen
+                val intent = Intent(this@PoastGerenratorInput, ViewGenratedPoastForLinkedIn::class.java)
+                intent.putExtra("responce", text)
+                intent.putExtra("inputText", input_text_area.text.toString())
+                intent.putExtra("selectedTone", selectedTone)
+                intent.putExtra("selectedlength", selectedlength)
+                intent.putExtra("includeHashtag", includeHashtag)
+                startActivity(intent)
+
+            }.onFailure { error ->
+                Log.e("HuggingFace", "Error: ${error.message}", error)
+
+                // Show error to user
+                Toast.makeText(
+                    this@PoastGerenratorInput,
+                    "Failed to generate post: ${error.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+    private fun showLoading() {
         progressBar.visibility = View.VISIBLE
-        textStatus.text = "Crafting your post"
+        textStatus.visibility = View.VISIBLE
+        textStatus.text = "Crafting your post..."
+        ll_generate_btn.isEnabled = false
         ll_generate_btn.alpha = 0.5f
     }
 
-    // Hide it when done
-    fun hideLoading() {
+    private fun hideLoading() {
         progressBar.visibility = View.GONE
-        textStatus.text = "Loaded successfully!"
+        textStatus.text = "Successfully Loaded"
+        ll_generate_btn.isEnabled = true
         ll_generate_btn.alpha = 1.0f
     }
-
     private fun iniatView() {
         menuIcon = findViewById(R.id.menu_icon)
         input_text_area = findViewById(R.id.input_text_area)
@@ -222,10 +265,11 @@ class PoastGerenratorInput : AppCompatActivity() {
         tv_short = findViewById(R.id.tv_short)
         tv_medium = findViewById(R.id.tv_medium)
         tv_long = findViewById(R.id.tv_long)
-        switch = findViewById(R.id.switch_hashtags)
         ll_generate_btn = findViewById(R.id.ll_generate_btn)
         textStatus = findViewById(R.id.text_status)
         progressBar = findViewById(R.id.progressBar)
+        textStatus.text = "Genrate Post"
+
     }
 
     private fun showPopupMenu(anchor: View) {

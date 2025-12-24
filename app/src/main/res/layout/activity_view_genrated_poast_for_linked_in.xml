@@ -121,25 +121,6 @@
                             android:textColor="@color/black"
                             android:fontFamily="@font/poppins_bold"
                             />
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Postion"
-                                android:textColor="@color/black"
-                                android:id="@+id/positon"
-                                android:textSize="12sp"
-                                />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="|Learner"
-                                android:textColor="@color/black"
-                                android:textSize="12sp"
-                                />
-                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
                 <LinearLayout
@@ -184,7 +165,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/baseline_mode_edit_24"/>
+                        android:src="@drawable/ic_edit"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -201,11 +182,11 @@
                     android:id="@+id/ll_copy"
                     android:orientation="vertical">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/baseline_content_copy_24"/>
+                        android:src="@drawable/ic_copy"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -223,11 +204,11 @@
                     android:id="@+id/ll_share"
                     android:orientation="vertical">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/baseline_share_24"/>
+                        android:src="@drawable/ic_share"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -249,7 +230,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
                         android:layout_gravity="center"
-                        android:src="@drawable/baseline_save_as_24"/>
+                        android:src="@drawable/ic_save"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

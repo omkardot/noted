@@ -9,6 +9,7 @@ import com.omkar.noted.R
 
 import android.animation.ObjectAnimator
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.lifecycle.lifecycleScope
@@ -75,14 +76,18 @@ class SplashActivity : AppCompatActivity() {
             // Wait for the animation to finish and display time (1000ms)
             delay(2500)
 
-            val isLoggedIn = prefs.getBoolean("isLoggedIn")
-            if (isLoggedIn){
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
+            val isLoggedIn = prefs.getBoolean("isLoggedIn")?:false
+            Log.d("logedin",isLoggedIn.toString())
+            if (isLoggedIn) {
+                val intent = Intent(this@SplashActivity, MainActivity::class.java)
+                intent.putExtra("navigate_to", "home")
+                startActivity(intent)
+            } else {
+                val intent = Intent(this@SplashActivity, LoginActivity::class.java)
+                intent.putExtra("navigate_to", "login")
+                startActivity(intent)
             }
-            else{
-                startActivity(Intent(this@SplashActivity, MainActivity::class.java))
-            }
-            finish() // Prevents the user from navigating back to the splash screen
+            finish()
         }
     }
 }

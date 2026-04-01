@@ -87,7 +87,6 @@
                 android:layout_height="wrap_content"
                 android:minLines="5"
                 android:gravity="top|start"
-                android:text="i have learned ai"
                 android:fontFamily="@font/poppins_regular"
                 android:hint="I completed a course on C# generics and built a project using them."
                 android:inputType="textMultiLine"

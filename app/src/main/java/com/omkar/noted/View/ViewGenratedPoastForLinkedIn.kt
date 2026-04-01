@@ -37,6 +37,9 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
     private var includeHashtag=""
     private var selectedlength=""
     private var selectedTone=""
+    private var genratedOn=""
+    private var from=""
+    private var postTitle=""
     private var inputText=""
     private lateinit var username:TextView
     private lateinit var userImage:ImageView
@@ -102,20 +105,29 @@ class ViewGenratedPoastForLinkedIn : AppCompatActivity() {
             aiPost.isEnabled =true
         }
         ll_save.setOnClickListener {
+            if (from.equals("savedpost")){
+                Toast.makeText(this@ViewGenratedPoastForLinkedIn, "This Post is already saved",Toast.LENGTH_SHORT).show()
+            }
+            else{
+                val currentTime = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
+                try {
 
+                    if (aiPost.text.equals("") || inputText.equals("")){
+                        Toast.makeText(this, "Post cannot be saved", Toast.LENGTH_SHORT).show()
+                    }
+                    else{
+                        val inserted = db.insertSavedPost(currentTime, aiPost.text.toString(),inputText)
 
-            val currentTime = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
-            try {
-                Log.d("inputText",inputText)
-                val inserted = db.insertSavedPost(currentTime, aiPost.text.toString(),inputText)
+                        if (inserted != -1L) {
+                            Toast.makeText(this, "Post Saved Successfully", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Failed to Save Post", Toast.LENGTH_SHORT).show()
+                        }
+                    }
 
-                if (inserted != -1L) {
-                    Toast.makeText(this, "Post Saved Successfully", Toast.LENGTH_SHORT).show()
-                } else {
-                    Toast.makeText(this, "Failed to Save Post", Toast.LENGTH_SHORT).show()
+                } catch (e: Exception) {
+                    Log.e("ERROR", e.toString())
                 }
-            } catch (e: Exception) {
-                Log.e("ERROR", e.toString())
             }
         }
         regenratePost.setOnClickListener {
@@ -182,6 +194,7 @@ Guidelines:
         Glide.with(this@ViewGenratedPoastForLinkedIn)
             .asBitmap()
             .load(imageUrl)
+            .placeholder(R.drawable.profilepicture)
             .into(userImage)
     }
 
@@ -199,7 +212,6 @@ Guidelines:
     private fun initView() {
         username = findViewById(R.id.username)
         userImage = findViewById(R.id.userImage)
-        position = findViewById(R.id.positon)
         aiPost = findViewById(R.id.tv_genrated)
         aiPost.isEnabled = false
         action_back = findViewById(R.id.action_back)
@@ -211,12 +223,29 @@ Guidelines:
         textStatus = findViewById(R.id.text_status)
         progressBar = findViewById(R.id.progressBar)
         menu_icon = findViewById(R.id.menu_icon)
+
+
+        if (from.equals("savedpost")){
+            executeFromeSavedPostLogic()
+        }
+    }
+
+    private fun executeFromeSavedPostLogic() {
+        regenratePost.visibility =View.GONE
+
+
     }
 
     private fun fetchIntent() {
         val intent = intent
         if (intent.hasExtra("responce")){
             apiresponce = intent.getStringExtra("responce").toString()
+        }
+        if (intent.hasExtra("from")){
+            from = intent.getStringExtra("from").toString()
+            if (intent.hasExtra("posttext")){
+                apiresponce = intent.getStringExtra("posttext").toString()
+            }
         }
         if (intent.hasExtra("inputText")){
             inputText =intent.getStringExtra("inputText").toString()

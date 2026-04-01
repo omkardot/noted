@@ -2,9 +2,11 @@ package com.omkar.noted.Fragements
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,19 +15,29 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.omkar.noted.Database.DatabaseHelper
+import com.omkar.noted.Genaric.NotedSharedPreference
 import com.omkar.noted.R
+import com.omkar.noted.View.SplashActivity
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class ProfileFragment : AppCompatActivity() {
     private lateinit var db:DatabaseHelper
+
+    private lateinit var prefs: NotedSharedPreference
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_profile)
         db = DatabaseHelper(this@ProfileFragment)
+        prefs = NotedSharedPreference(this@ProfileFragment)
         initView()
     }
 
@@ -48,8 +60,28 @@ class ProfileFragment : AppCompatActivity() {
             showHelpAndSupportDialog()
         }
         logout.setOnClickListener {
-
+            showlogoutDialog()
         }
+    }
+    private fun showlogoutDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_logout, null)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(true)
+            .create()
+        val btnClose = dialogView.findViewById<ImageButton>(R.id.btnClose)
+        val btnCancel = dialogView.findViewById<LinearLayout>(R.id.cancel)
+        val btnlogout = dialogView.findViewById<LinearLayout>(R.id.btnlogout)
+
+        btnlogout.setOnClickListener {
+            logoutFromApp()
+        }
+        btnClose.setOnClickListener {
+            dialog.dismiss()
+        }
+        btnCancel.setOnClickListener { dialog.dismiss() }
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        dialog.show()
     }
     private fun fetchNameAndImageFromDB(profile_name:TextView,profile_image: CircleImageView) {
         val (name, imageUrl) = db.getImageAndName()
@@ -57,8 +89,25 @@ class ProfileFragment : AppCompatActivity() {
         Glide.with(this)
             .asBitmap()
             .load(imageUrl)
-            .placeholder(R.drawable.baseline_person_24)
+            .placeholder(R.drawable.profilepicture)
             .into(profile_image)
+    }
+    private fun logoutFromApp() {
+        Log.d(TAG, "logoutFromApp:before "+prefs.getBoolean("isLoggedIn"))
+        if (prefs.getBoolean("isLoggedIn")){
+            prefs.saveBoolean("isLoggedIn",false)
+            Log.d(TAG, "logoutFromApp:inside "+prefs.getBoolean("isLoggedIn"))
+        }
+        Log.d(TAG, "logoutFromApp:outside "+prefs.getBoolean("isLoggedIn"))
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            db.clearAllTables()
+            withContext(Dispatchers.Main) {
+                Log.d(TAG, "logoutFromApp: "+prefs.getBoolean("isLoggedIn"))
+                Toast.makeText(this@ProfileFragment, "Logged out successfully", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this@ProfileFragment, SplashActivity::class.java))
+            }
+        }
     }
     private fun showHelpAndSupportDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_help_support, null)

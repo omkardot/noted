@@ -1,5 +1,6 @@
 package com.omkar.noted.Adapters
 
+import android.content.Intent
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.omkar.noted.Genaric.SavedPosts
 import com.omkar.noted.R
+import com.omkar.noted.View.ViewGenratedPoastForLinkedIn
 
 
 class SavedPostAdapter(private val itemList: List<SavedPosts>) : RecyclerView.Adapter<SavedPostAdapter.MyViewHolder>() {
@@ -31,6 +33,15 @@ class SavedPostAdapter(private val itemList: List<SavedPosts>) : RecyclerView.Ad
         holder.savedPostsTitle.text = item.title
         holder.genratedOn.text = "Genrated On :"+item.genrated_on
         holder.savedPostsDes.text = item.discription
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(holder.itemView.context,ViewGenratedPoastForLinkedIn::class.java)
+            intent.putExtra("from","savedpost")
+            intent.putExtra("postTitle",item.title)
+            intent.putExtra("posttext",item.discription)
+            intent.putExtra("genratedOn",item.genrated_on)
+            holder.itemView.context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int = itemList.size

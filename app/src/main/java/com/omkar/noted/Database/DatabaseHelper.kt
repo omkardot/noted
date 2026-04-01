@@ -6,6 +6,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.util.Log
 import com.omkar.noted.Genaric.SavedPosts
 import com.omkar.noted.Genaric.User
 
@@ -86,7 +87,18 @@ class DatabaseHelper(context: Context) :
 
         return Pair(name, imageUrl)
     }
-
+    fun clearAllTables() {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            db.delete(TABLE_USERS, null, null)
+            db.setTransactionSuccessful()
+        } catch (e: Exception) {
+            Log.e("DatabaseHelper", "Error clearing tables: ${e.message}")
+        } finally {
+            db.endTransaction()
+        }
+    }
 
     // Insert user
         fun insertUser(uid:String,name: String, email: String,provider: String,createdAt: String, last_login: String, profile_url: String): Long {

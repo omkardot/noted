@@ -15,7 +15,7 @@
     <!-- Brand -->
     <color name="primary_blue">#0A66C2</color>
     <color name="primary_blue_dark">#083E7A</color>
-    <color name="accent_indigo">#6C63FF</color>
+    <color name="accent_indigo">#083E7A</color>
 
     <!-- Backgrounds -->
     <color name="surface_white">#FFFFFF</color>

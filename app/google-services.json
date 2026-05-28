@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "225066058467",
+    "project_id": "noted-9afe3",
+    "storage_bucket": "noted-9afe3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225066058467:android:2749622f1452e564a03bd6",
+        "android_client_info": {
+          "package_name": "com.varram.noted"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "225066058467-n8jf2v91su5l5lvi03cmdh5pdnrqooqp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.varram.noted",
+            "certificate_hash": "80cff714845a6b3572dbb2e8f8baf4088eb9836c"
+          }
+        },
+        {
+          "client_id": "225066058467-o6658l5aam84lbrn6a0dnvigm29j444u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.varram.noted",
+            "certificate_hash": "5453c1e1628d80ae7384bed0f810cbee9a82ad19"
+          }
+        },
+        {
+          "client_id": "225066058467-tnav026tl28poecp1fiecag5db2osoin.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.varram.noted",
+            "certificate_hash": "07d8899afa8ad3dc60674c4ae21b2d4a14890859"
+          }
+        },
+        {
+          "client_id": "225066058467-694hl5g0m38v8a90ksfru4mko25ttipc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9_8_R2e0h9SVX4E64MbIkRqYsT1Mufg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "225066058467-694hl5g0m38v8a90ksfru4mko25ttipc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

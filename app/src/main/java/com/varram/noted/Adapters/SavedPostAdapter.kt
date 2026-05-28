@@ -1,17 +1,14 @@
-package com.omkar.noted.Adapters
+package com.varram.noted.Adapters
 
 import android.content.Intent
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.omkar.noted.Genaric.SavedPosts
-import com.omkar.noted.R
-import com.omkar.noted.View.ViewGenratedPoastForLinkedIn
+import com.varram.noted.Genaric.SavedPosts
+import com.varram.noted.R
+import com.varram.noted.View.ViewGenratedPoastForLinkedIn
 
 
 class SavedPostAdapter(private val itemList: List<SavedPosts>) : RecyclerView.Adapter<SavedPostAdapter.MyViewHolder>() {

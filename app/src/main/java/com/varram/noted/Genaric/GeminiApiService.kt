@@ -1,4 +1,4 @@
-package com.omkar.noted.Genaric
+package com.varram.noted.Genaric
 
 import retrofit2.Call
 import retrofit2.http.Body

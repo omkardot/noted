@@ -1,4 +1,4 @@
-package com.omkar.noted.Genaric
+package com.varram.noted.Genaric
 
 data class User(
     val id: Int,

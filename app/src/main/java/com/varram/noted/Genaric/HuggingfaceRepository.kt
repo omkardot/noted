@@ -1,6 +1,6 @@
 import android.content.Context
 import android.util.Log
-import com.omkar.noted.R
+import com.varram.noted.R
 import kotlinx.coroutines.*
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType

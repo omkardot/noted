@@ -1,27 +1,29 @@
-package com.omkar.noted.Fragements
+package com.varram.noted.Fragements
 
 import HuggingFaceTextGenerator
+import android.content.Context
 import android.widget.EditText
 import android.content.Intent
-import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.PopupMenu
 import android.widget.ProgressBar
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.omkar.noted.R
-import com.omkar.noted.View.ViewGenratedPoastForLinkedIn
+import com.varram.noted.R
+import com.varram.noted.View.ViewGenratedPoastForLinkedIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PoastGeneratorInputFragment : Fragment() {
 
@@ -160,11 +162,41 @@ class PoastGeneratorInputFragment : Fragment() {
         }
 
         ll_generate_btn.setOnClickListener {
-            generateText()
+            ll_generate_btn.setOnClickListener {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val isConnected = isInternetAvailable(requireContext())
+                    withContext(Dispatchers.Main) {
+                        if (isConnected) {
+                            generateText()
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Please Connect to Internet",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+                }
+            }
         }
 
     }
+    fun isInternetAvailable(context: Context): Boolean {
+        val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = cm.activeNetwork ?: return false
+            val capabilities = cm.getNetworkCapabilities(network) ?: return false
+            return capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ||
+                    capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        } else {
+            @Suppress("DEPRECATION")
+            val networkInfo = cm.activeNetworkInfo ?: return false
+            @Suppress("DEPRECATION")
+            return networkInfo.isConnected
+        }
+    }
     private fun generateText() {
         if (input_text_area.text.isNullOrEmpty()) {
             Toast.makeText(requireContext(), "Please enter a topic", Toast.LENGTH_SHORT).show()

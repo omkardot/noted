@@ -1,4 +1,4 @@
-package com.omkar.noted.View
+package com.varram.noted.View
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -8,36 +8,25 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
-import com.google.firebase.FirebaseApp
-import com.omkar.noted.Database.DatabaseHelper
-import com.omkar.noted.Fragements.LoginFragment
-import com.omkar.noted.Fragements.PoastGeneratorInputFragment
-import com.omkar.noted.Fragements.ProfileFragment
-import com.omkar.noted.Fragements.SavedPostFragment
-import com.omkar.noted.Fragements.SettingFragment
-import com.omkar.noted.Genaric.NotedSharedPreference
-import com.omkar.noted.R
+import com.varram.noted.Database.DatabaseHelper
+import com.varram.noted.Fragements.PoastGeneratorInputFragment
+import com.varram.noted.Fragements.ProfileFragment
+import com.varram.noted.Fragements.SavedPostFragment
+import com.varram.noted.Genaric.NotedSharedPreference
+import com.varram.noted.R
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -229,7 +218,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private fun openContactSupport() {
         // Open email client or support chat
         val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:support@Noted.com")
+            data = Uri.parse("mailto:varram.omkar.dev@gmail.com")
             putExtra(Intent.EXTRA_SUBJECT, "Support Request")
         }
         startActivity(Intent.createChooser(intent, "Contact Support"))
@@ -237,7 +226,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun openReportBug() {
         val intent = Intent(Intent.ACTION_SENDTO).apply {
-            data = Uri.parse("mailto:bugs@noted.com")
+            data = Uri.parse("mailto:varram.omkar.dev@gmail.com")
             putExtra(Intent.EXTRA_SUBJECT, "Bug Report")
         }
         startActivity(Intent.createChooser(intent, "Report Bug"))

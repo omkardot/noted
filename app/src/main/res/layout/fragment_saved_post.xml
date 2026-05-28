@@ -36,11 +36,22 @@
                 android:fontFamily="@font/poppins_bold"
                 />
         </LinearLayout>
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="24sp"
+            android:text="No post saved"
+            android:textColor="#5A0D121C"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/no_post_text"
+            android:fontFamily="@font/poppins_bold"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:visibility="gone"
             tools:listitem="@layout/saved_post_item"
             android:id="@+id/post_recycleview"/>
     </LinearLayout>

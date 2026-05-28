@@ -1,8 +1,6 @@
-package com.omkar.noted.Genaric
+package com.varram.noted.Genaric
 
-import android.content.Intent
 import android.util.Log
-import com.omkar.noted.View.ViewGenratedPoastForLinkedIn
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

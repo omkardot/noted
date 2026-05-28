@@ -1,4 +1,4 @@
-package com.omkar.noted.Genaric
+package com.varram.noted.Genaric
 
 import android.content.Context
 import android.content.SharedPreferences

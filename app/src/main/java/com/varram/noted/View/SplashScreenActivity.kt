@@ -1,11 +1,8 @@
-package com.omkar.noted.View
+package com.varram.noted.View
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.omkar.noted.R
+import com.varram.noted.R
 
 import android.animation.ObjectAnimator
 import android.content.Intent
@@ -13,8 +10,7 @@ import android.util.Log
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.lifecycle.lifecycleScope
-import com.omkar.noted.Fragements.LoginFragment
-import com.omkar.noted.Genaric.NotedSharedPreference
+import com.varram.noted.Genaric.NotedSharedPreference
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

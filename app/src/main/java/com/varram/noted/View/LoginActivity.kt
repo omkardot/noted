@@ -1,27 +1,27 @@
-package com.omkar.noted.Fragements
+package com.varram.noted.View
+
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import com.varram.noted.R
+
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.content.Intent
-import android.os.Bundle
+import android.graphics.Typeface
 import android.text.Editable
 import android.text.Html
 import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.util.Patterns
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -35,21 +35,18 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.omkar.noted.Database.DatabaseHelper
-import com.omkar.noted.Genaric.NotedSharedPreference
-import com.omkar.noted.R
-import com.omkar.noted.View.MainActivity
-import com.omkar.noted.View.PoastGerenratorInput
+import com.varram.noted.Database.DatabaseHelper
+import com.varram.noted.Genaric.NotedSharedPreference
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+class LoginActivity : AppCompatActivity() {
 
-class LoginFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private val firestore = FirebaseFirestore.getInstance()
     private lateinit var googleSignInClient: GoogleSignInClient
-    private var RC_SIGN_IN: Int = 1001
+    private val RC_SIGN_IN: Int = 1001
     private var isSignUpMode = false
 
     // View references
@@ -83,75 +80,75 @@ class LoginFragment : Fragment() {
     private lateinit var dbHelper: DatabaseHelper
 
     @SuppressLint("MissingInflatedId")
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_login, container, false)
-        if (FirebaseApp.getApps(requireContext()).isEmpty()) {
-            FirebaseApp.initializeApp(requireContext())
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_login) // You might want to rename this to activity_login.xml
+
+        if (FirebaseApp.getApps(this).isEmpty()) {
+            FirebaseApp.initializeApp(this)
         }
+
         // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
-        prefs = NotedSharedPreference(view.context)
-        dbHelper = DatabaseHelper(view.context)
+        prefs = NotedSharedPreference(this)
+        dbHelper = DatabaseHelper(this)
 
         // Google sign-in config
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
 
         // Initialize all views
-        initializeViews(view)
+        initializeViews()
 
         // Setup UI
         setupInitialMode()
         setupListeners()
         setupPasswordStrengthMonitor()
         setupTermsAndConditions()
-
-        return view
     }
 
-    private fun initializeViews(view: View) {
+    private fun initializeViews() {
         // Text Views
-        loginTitle = view.findViewById(R.id.login_title)
-        loginSubtitle = view.findViewById(R.id.login_subtitle)
-        errorMessageText = view.findViewById(R.id.error_message_text)
-        passwordStrengthText = view.findViewById(R.id.password_strength_text)
-        forgotPasswordText = view.findViewById(R.id.forgot_password_text)
-        authSwitchPrompt = view.findViewById(R.id.auth_switch_prompt)
-        authSwitchAction = view.findViewById(R.id.auth_switch_action)
+        loginTitle = findViewById(R.id.login_title)
+        loginSubtitle = findViewById(R.id.login_subtitle)
+        errorMessageText = findViewById(R.id.error_message_text)
+        passwordStrengthText = findViewById(R.id.password_strength_text)
+        forgotPasswordText = findViewById(R.id.forgot_password_text)
+        authSwitchPrompt = findViewById(R.id.auth_switch_prompt)
+        authSwitchAction = findViewById(R.id.auth_switch_action)
+        forgotPasswordText.visibility = View.GONE
 
         // Input Layouts
-        nameInputLayout = view.findViewById(R.id.name_input_layout)
-        emailInputLayout = view.findViewById(R.id.email_input_layout)
-        passwordInputLayout = view.findViewById(R.id.password_input_layout)
-        confirmPasswordInputLayout = view.findViewById(R.id.confirm_password_input_layout)
+        nameInputLayout = findViewById(R.id.name_input_layout)
+        emailInputLayout = findViewById(R.id.email_input_layout)
+        passwordInputLayout = findViewById(R.id.password_input_layout)
+        confirmPasswordInputLayout = findViewById(R.id.confirm_password_input_layout)
 
         // Edit Texts
-        nameEditText = view.findViewById(R.id.name_edit_text)
-        emailEditText = view.findViewById(R.id.email_edit_text)
-        passwordEditText = view.findViewById(R.id.password_edit_text)
-        confirmPasswordEditText = view.findViewById(R.id.confirm_password_edit_text)
+        nameEditText = findViewById(R.id.name_edit_text)
+        emailEditText = findViewById(R.id.email_edit_text)
+        passwordEditText = findViewById(R.id.password_edit_text)
+        confirmPasswordEditText = findViewById(R.id.confirm_password_edit_text)
 
         // Password Strength Indicators
-        passwordStrengthLayout = view.findViewById(R.id.password_strength_layout)
-        strengthIndicator1 = view.findViewById(R.id.strength_indicator_1)
-        strengthIndicator2 = view.findViewById(R.id.strength_indicator_2)
-        strengthIndicator3 = view.findViewById(R.id.strength_indicator_3)
-        strengthIndicator4 = view.findViewById(R.id.strength_indicator_4)
+        passwordStrengthLayout = findViewById(R.id.password_strength_layout)
+        strengthIndicator1 = findViewById(R.id.strength_indicator_1)
+        strengthIndicator2 = findViewById(R.id.strength_indicator_2)
+        strengthIndicator3 = findViewById(R.id.strength_indicator_3)
+        strengthIndicator4 = findViewById(R.id.strength_indicator_4)
 
         // Buttons and Controls
-        termsCheckbox = view.findViewById(R.id.terms_checkbox)
-        loginButton = view.findViewById(R.id.login_button)
-        loginProgressBar = view.findViewById(R.id.login_progress_bar)
-        googleSignUpButton = view.findViewById(R.id.google_sign_up_button)
-        linkedinSignUpButton = view.findViewById(R.id.linkedin_sign_up_button)
-
+        termsCheckbox = findViewById(R.id.terms_checkbox)
+        loginButton = findViewById(R.id.login_button)
+        loginProgressBar = findViewById(R.id.login_progress_bar)
+        googleSignUpButton = findViewById(R.id.google_sign_up_button)
+        linkedinSignUpButton = findViewById(R.id.linkedin_sign_up_button)
+        linkedinSignUpButton.visibility = View.GONE
         // Layouts
-        orDividerLayout = view.findViewById(R.id.or_divider_layout)
+        orDividerLayout = findViewById(R.id.or_divider_layout)
     }
 
     private fun setupInitialMode() {
@@ -247,7 +244,7 @@ class LoginFragment : Fragment() {
             termsCheckbox.visibility = View.VISIBLE
             orDividerLayout.visibility = View.VISIBLE
             googleSignUpButton.visibility = View.VISIBLE
-            linkedinSignUpButton.visibility = View.VISIBLE
+//            linkedinSignUpButton.visibility = View.VISIBLE
 
             // Hide login specific fields
             forgotPasswordText.visibility = View.GONE
@@ -258,6 +255,8 @@ class LoginFragment : Fragment() {
             loginSubtitle.text = getString(R.string.sign_in_subtitle)
             loginButton.text = getString(R.string.btn_log_in)
             authSwitchPrompt.text = getString(R.string.dont_have_account)
+            authSwitchPrompt.setTypeface(null, Typeface.ITALIC)
+            loginSubtitle.setTypeface(null, Typeface.ITALIC)
             authSwitchAction.text = getString(R.string.sign_up_action)
 
             // Hide sign up specific fields
@@ -269,9 +268,11 @@ class LoginFragment : Fragment() {
             orDividerLayout.visibility = View.GONE
             googleSignUpButton.visibility = View.GONE
             linkedinSignUpButton.visibility = View.GONE
+            googleSignUpButton.visibility = View.VISIBLE
+            googleSignUpButton.text = "Continue with Google"
 
             // Show login specific fields
-            forgotPasswordText.visibility = View.VISIBLE
+//            forgotPasswordText.visibility = View.VISIBLE
         }
 
         // Clear all fields when switching modes
@@ -324,7 +325,7 @@ class LoginFragment : Fragment() {
         auth.sendPasswordResetEmail(email)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(requireContext(), "Password reset email sent", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Password reset email sent", Toast.LENGTH_SHORT).show()
                 } else {
                     showError("Failed to send reset email: ${task.exception?.message}")
                 }
@@ -406,37 +407,37 @@ class LoginFragment : Fragment() {
         val strength = calculatePasswordStrength(password)
 
         // Reset all indicators
-        strengthIndicator1.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.darker_gray))
-        strengthIndicator2.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.darker_gray))
-        strengthIndicator3.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.darker_gray))
-        strengthIndicator4.setBackgroundColor(ContextCompat.getColor(requireContext(), android.R.color.darker_gray))
+        strengthIndicator1.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray))
+        strengthIndicator2.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray))
+        strengthIndicator3.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray))
+        strengthIndicator4.setBackgroundColor(ContextCompat.getColor(this, android.R.color.darker_gray))
 
         when (strength) {
             1 -> {
-                strengthIndicator1.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.password_weak))
+                strengthIndicator1.setBackgroundColor(ContextCompat.getColor(this, R.color.password_weak))
                 passwordStrengthText.text = getString(R.string.password_strength_weak)
-                passwordStrengthText.setTextColor(ContextCompat.getColor(requireContext(), R.color.password_weak))
+                passwordStrengthText.setTextColor(ContextCompat.getColor(this, R.color.password_weak))
             }
             2 -> {
-                strengthIndicator1.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.password_fair))
-                strengthIndicator2.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.password_fair))
+                strengthIndicator1.setBackgroundColor(ContextCompat.getColor(this, R.color.password_fair))
+                strengthIndicator2.setBackgroundColor(ContextCompat.getColor(this, R.color.password_fair))
                 passwordStrengthText.text = getString(R.string.password_strength_fair)
-                passwordStrengthText.setTextColor(ContextCompat.getColor(requireContext(), R.color.password_fair))
+                passwordStrengthText.setTextColor(ContextCompat.getColor(this, R.color.password_fair))
             }
             3 -> {
-                strengthIndicator1.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.password_good))
-                strengthIndicator2.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.password_good))
-                strengthIndicator3.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.password_good))
+                strengthIndicator1.setBackgroundColor(ContextCompat.getColor(this, R.color.password_good))
+                strengthIndicator2.setBackgroundColor(ContextCompat.getColor(this, R.color.password_good))
+                strengthIndicator3.setBackgroundColor(ContextCompat.getColor(this, R.color.password_good))
                 passwordStrengthText.text = getString(R.string.password_strength_good)
-                passwordStrengthText.setTextColor(ContextCompat.getColor(requireContext(), R.color.password_good))
+                passwordStrengthText.setTextColor(ContextCompat.getColor(this, R.color.password_good))
             }
             4 -> {
-                strengthIndicator1.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.password_strong))
-                strengthIndicator2.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.password_strong))
-                strengthIndicator3.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.password_strong))
-                strengthIndicator4.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.password_strong))
+                strengthIndicator1.setBackgroundColor(ContextCompat.getColor(this, R.color.password_strong))
+                strengthIndicator2.setBackgroundColor(ContextCompat.getColor(this, R.color.password_strong))
+                strengthIndicator3.setBackgroundColor(ContextCompat.getColor(this, R.color.password_strong))
+                strengthIndicator4.setBackgroundColor(ContextCompat.getColor(this, R.color.password_strong))
                 passwordStrengthText.text = getString(R.string.password_strength_strong)
-                passwordStrengthText.setTextColor(ContextCompat.getColor(requireContext(), R.color.password_strong))
+                passwordStrengthText.setTextColor(ContextCompat.getColor(this, R.color.password_strong))
             }
             else -> {
                 passwordStrengthText.text = ""
@@ -537,7 +538,9 @@ class LoginFragment : Fragment() {
                 val account = task.getResult(ApiException::class.java)!!
                 firebaseAuthWithGoogle(account.idToken!!)
             } catch (e: Exception) {
-                showError("Google sign-in failed: ${e.message}")
+                if(!e.message!!.contains("12501")){
+                    showError("Google sign-in failed: ${e.message}")
+                }
                 Log.e(TAG, "Google sign-in failed", e)
             }
         }
@@ -550,24 +553,27 @@ class LoginFragment : Fragment() {
             showLoading(false)
             if (task.isSuccessful) {
                 saveUserToFirestore(auth.currentUser, "google")
-                insertDataToDB(auth.currentUser,"google")
+                insertDataToDB(auth.currentUser, "google")
             } else {
                 showError("Google login failed: ${task.exception?.message}")
             }
         }
     }
-    private fun insertDataToDB(user: FirebaseUser?, provider: String, displayName: String? = null){
+
+    private fun insertDataToDB(user: FirebaseUser?, provider: String, displayName: String? = null) {
+        if (user == null) return
+
         val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
-        val inserted =  dbHelper.insertUser(
-            user!!.uid,
-            user.displayName!!,
-            user.email!!,
+        val inserted = dbHelper.insertUser(
+            user.uid,
+            user.displayName ?: displayName ?: "",
+            user.email ?: "",
             provider,
-            currentTime.toString(),
-            currentTime.toString(),
-            user.photoUrl?.toString()!!
+            currentTime,
+            currentTime,
+            user.photoUrl?.toString() ?: ""
         )
-        Log.d("Inserted",inserted.toString())
+        Log.d("Inserted", inserted.toString())
     }
 
     private fun saveUserToFirestore(user: FirebaseUser?, provider: String, displayName: String? = null) {
@@ -580,6 +586,7 @@ class LoginFragment : Fragment() {
             if (document.exists()) {
                 // Update last login
                 userRef.update("lastLogin", now).addOnSuccessListener {
+                    insertDataToDB(user, provider, displayName)
                     navigateToHome()
                 }
             } else {
@@ -594,6 +601,7 @@ class LoginFragment : Fragment() {
                     "profilePicUrl" to user.photoUrl?.toString()
                 )
                 userRef.set(userData).addOnSuccessListener {
+                    insertDataToDB(user, provider, displayName)
                     navigateToHome()
                 }
             }
@@ -603,9 +611,10 @@ class LoginFragment : Fragment() {
     }
 
     private fun navigateToHome() {
-        startActivity(Intent(requireContext(),MainActivity::class.java))
         prefs.saveBoolean("isLoggedIn", true)
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 }
-
-

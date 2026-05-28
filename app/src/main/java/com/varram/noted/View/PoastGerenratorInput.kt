@@ -1,48 +1,31 @@
-package com.omkar.noted.View
+package com.varram.noted.View
 
 import HuggingFaceTextGenerator
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ProgressBar
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.navigation.NavigationView
-import com.omkar.noted.Genaric.Content
-import com.omkar.noted.Genaric.GeminiApiService
-import com.omkar.noted.Genaric.GeminiRequest
-import com.omkar.noted.Genaric.GenricApiCalls
-import com.omkar.noted.Genaric.Part
-import com.omkar.noted.R
+import com.varram.noted.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Body
-import retrofit2.http.POST
-import retrofit2.http.Query
+import kotlinx.coroutines.withContext
+import kotlinx.io.IOException
+import java.net.InetSocketAddress
+import java.net.Socket
 
 class PoastGerenratorInput : AppCompatActivity() {
     private lateinit var generator : HuggingFaceTextGenerator
@@ -162,9 +145,34 @@ class PoastGerenratorInput : AppCompatActivity() {
         }
 
         ll_generate_btn.setOnClickListener {
-            generateText()
+            CoroutineScope(Dispatchers.IO).launch {
+                val isConnected = isInternetAvailable()
+                withContext(Dispatchers.Main) {
+                    if (isConnected) {
+                        generateText()
+                    } else {
+                        Toast.makeText(
+                            this@PoastGerenratorInput,
+                            "Please Connect to Internet",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         }
 
+    }
+    fun isInternetAvailable(): Boolean {
+        return try {
+            val timeoutMs = 1500
+            val socket = Socket()
+            val socketAddress = InetSocketAddress("8.8.8.8", 53)
+            socket.connect(socketAddress, timeoutMs)
+            socket.close()
+            true
+        } catch (e: IOException) {
+            false
+        }
     }
      fun generateText() {
         // Validate input

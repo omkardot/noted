@@ -1,4 +1,4 @@
-package com.omkar.noted.Database
+package com.varram.noted.Database
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -7,8 +7,8 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.omkar.noted.Genaric.SavedPosts
-import com.omkar.noted.Genaric.User
+import com.varram.noted.Genaric.SavedPosts
+import com.varram.noted.Genaric.User
 
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -92,6 +92,7 @@ class DatabaseHelper(context: Context) :
         db.beginTransaction()
         try {
             db.delete(TABLE_USERS, null, null)
+            db.delete(TABLE_SAVED_POST, null, null)
             db.setTransactionSuccessful()
         } catch (e: Exception) {
             Log.e("DatabaseHelper", "Error clearing tables: ${e.message}")

@@ -1,4 +1,4 @@
-package com.omkar.noted
+package com.varram.noted
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate

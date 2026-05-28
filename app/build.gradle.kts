@@ -1,23 +1,30 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id ("com.google.gms.google-services")
+    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.omkar.noted"
+    namespace = "com.varram.noted"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.omkar.noted"
+        applicationId = "com.varram.noted"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 5
+        versionName = "2.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    signingConfigs {
+        create("release") {
+            storeFile =file("../app/varram.noted.jks")
+            storePassword ="varram.noted"
+            keyAlias ="key0"
+            keyPassword= "varram.noted"
+        }
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -25,12 +32,15 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }

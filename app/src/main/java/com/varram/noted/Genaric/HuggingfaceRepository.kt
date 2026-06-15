@@ -38,7 +38,7 @@ class HuggingFaceTextGenerator(context: Context) {
             }
 
             val jsonBody = JSONObject().apply {
-                put("model", "meta-llama/Llama-3.2-1B-Instruct")
+                put("model", "meta-llama/Llama-3.1-8B-Instruct:novita")
                 put("max_tokens", 300)
                 put("messages", messageArray)
             }

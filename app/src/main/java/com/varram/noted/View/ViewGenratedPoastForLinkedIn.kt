@@ -175,7 +175,7 @@ Guidelines:
                 // Show error to user
                 Toast.makeText(
                     this@ViewGenratedPoastForLinkedIn,
-                    "Failed to generate post: ${error.message}",
+                    "Failed to generate post report a bug",
                     Toast.LENGTH_LONG
                 ).show()
             }

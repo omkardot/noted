@@ -165,6 +165,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 Log.d(TAG, "logoutFromApp: "+prefs.getBoolean("isLoggedIn"))
                     Toast.makeText(this@MainActivity, "Logged out successfully", Toast.LENGTH_SHORT).show()
                     startActivity(Intent(this@MainActivity,SplashActivity::class.java))
+                    finish()
             }
         }
     }
